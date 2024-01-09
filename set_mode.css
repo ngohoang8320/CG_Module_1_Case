@@ -1,0 +1,116 @@
+@import url('https://db.onlinewebfonts.com/c/b10849c899982654fae3f01d02269043?family=Emulogic');
+
+.set {
+    vertical-align: top;
+    display: inline-block;
+    position: relative;
+}
+
+/* Restart Btn */
+.reset {
+    /* vertical-align: top; */
+    position: absolute;
+    left: 70px;
+    width: 80px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    font-family: "Emulogic";
+    font-size: 10px;
+    background-color: #d9d9d9;
+}
+
+.reset:hover {
+    background-color: rgba(217, 217, 217, 0.8);
+}
+
+.reset:active {
+    background-color: #2c23cd;
+    color: #f0f0f0;
+}
+
+/* Hard mode */
+.switch {
+    position: absolute;
+    top: 50px;
+    display: inline-block;
+    width: 60px;
+    height: 35px;
+    left: 80px;
+    /* background-color: black; */
+    /* vertical-align: top; */
+    font-family: "Emulogic";
+    color: white;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(56, 210, 56);
+
+    border-radius: 20px;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    top: 4.5px;
+    background-color: white;
+
+    border-radius: 50%;
+    transition: .4s;
+}
+
+.text_b {
+    position: absolute;
+    left: -75px;
+    top: 9px;
+    font-size: 12px;
+
+    opacity: 1;
+    transform: translateX(-15px);
+    transition: .8s;
+}
+
+.text_a {
+    position: absolute;
+    left: 60px;
+    top: 9px;
+    font-size: 12px;
+
+    opacity: 0;
+    transform: translateX(0px);
+    transition: .8s;
+}
+
+input:checked+.slider {
+    background-color: rgb(255, 100, 0);
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+input:checked+.slider+.text_b+.text_a {
+    opacity: 1;
+    transform: translateX(15px);
+}
+
+input:checked+.slider+.text_b {
+    opacity: 0;
+    transform: translateX(0px);
+}
