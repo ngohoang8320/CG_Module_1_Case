@@ -22,7 +22,7 @@ let foodColor = 'yellow'
 let score = 0
 let scoreCount = 0
 
-//Create array to push ghost from image to game
+//Create array to push ghost from the image to game
 let ghosts = []
 let ghostCount = 4
 
@@ -36,6 +36,7 @@ const DIRECTION_UP = 3
 const DIRECTION_LEFT = 2
 const DIRECTION_DOWN = 1
 
+//Set default ghosts's location
 let ghostLocations = [
     { x: 0, y: 0 },
     { x: 176, y: 0 },
@@ -43,6 +44,7 @@ let ghostLocations = [
     { x: 176, y: 121 },
 ]
 
+//Create a map
 let map_origin = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -100,6 +102,7 @@ for (let i = 0; i < map_origin.length; i++) {
     map[i] = map_origin[i].slice()
 }
 
+//Count origin number of food to check if eat all the food to set you win
 for (let i = 0; i < map.length; i++) {
     for (let j = 0; j < map[0].length; j++) {
         if (map[i][j] == 2) {
@@ -108,6 +111,7 @@ for (let i = 0; i < map.length; i++) {
     }
 }
 
+//Set some location for ghosts to focus when they don't aware pacman
 let randomTargetsForGhost = [
     { x: oneBlockSize, y: oneBlockSize },
     { x: oneBlockSize, y: (map.length - 3) * oneBlockSize },
@@ -117,17 +121,17 @@ let randomTargetsForGhost = [
     { x: (map[0].length - 5) * oneBlockSize, y: ((map.length - 3) / 2) * oneBlockSize },
     { x: 5 * oneBlockSize, y: ((map.length - 3) / 2 + 5) * oneBlockSize },
     { x: (map[0].length - 5) * oneBlockSize, y: ((map.length - 3) / 2 + 5) * oneBlockSize },
-    // Add more random target position
+    // Added more random target position
 ]
 
-//call every 1/fps(s) by setInterval
+//Called every 1/fps(s) by gameInterval
 let gameLoop = function () {
     draw()
     update()
     drawlives()
 }
 
-//New feat: If you eat frequency in 2 second, you get more point
+//NEW FEAT: IF YOU EAT FREQUENCY IN 2 SECOND, YOU GET MORE POINT
 let plusScore = 10
 let tempScore
 setInterval(() => {
@@ -150,7 +154,7 @@ let update = function () {
         ghosts[i].moveProcess()
     }
 
-    if (pacman.checkGhostColission()) {
+    if (pacman.checkGhostCollision()) {
         restartGame()
     }
 
@@ -246,7 +250,7 @@ let drawlives = () => {
     }
 }
 
-let draw = function () {
+let draw = () => {
     createRect(0, 0, canvas.width, canvas.height, 'black')
 
     drawWalls()
@@ -286,7 +290,7 @@ let drawscore = () => {
     )
 }
 
-let gameInterval = setInterval(gameLoop, 1000 / fps) // When I done with map, I'll use you
+let gameInterval = setInterval(gameLoop, 1000 / fps)
 
 //MORE FEATURE: RESTART
 let reset = function () {
@@ -374,8 +378,8 @@ let createNewPacman = () => {
 
 let createNewGhosts = function (gSpeed) {
     ghosts = []
-    for (let i = 0; i < ghostCount * 5; i++) {
-        let newGhost = new Ghost(
+    for (let i = 0; i < ghostCount * 3; i++) {
+        let newGhost = new Ghosts(
             9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
             10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
             oneBlockSize,
@@ -391,7 +395,7 @@ let createNewGhosts = function (gSpeed) {
     }
 }
 
-//Add new feature HardMode
+//NEW FEATURE: HARDMODE
 let checkb = document.getElementById('ckb')
 let check_hard = function () {
     if (checkb.checked) {
@@ -404,11 +408,12 @@ let check_hard = function () {
     }
 }
 
-//Create Pacman and Ghosts
+//Create Pacman
 createNewPacman()
-check_hard() //And create ghosts
+//Check hard mode, create ghosts and set speed to ghosts 
+check_hard()
 
-
+//Set animation for Pacman
 setInterval(function () {
     pacman.changeAnimation()
 }, 100)

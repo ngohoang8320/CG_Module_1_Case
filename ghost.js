@@ -1,4 +1,4 @@
-class Ghost {
+class Ghosts {
     constructor(x, y, width, height, speed, imageX, imageY, imageWidth, imageHeight, range) {
         this.x = x
         this.y = y

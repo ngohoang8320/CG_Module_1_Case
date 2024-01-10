@@ -7,7 +7,7 @@ class Pacman {
         this.speed = speed
         this.direction = DIRECTION_RIGHT
         this.nextDirection = this.direction
-        this.currentFame = 1
+        this.currentFrame = 1
         this.frameCount = 7
 
         /* setInterval(() => {
@@ -15,7 +15,7 @@ class Pacman {
         }, 100) */
 
         /* setInterval(function () {
-            this.currentFame = 1
+            this.currentFrame = 1
             this.frameCount = 7;
             this.changeAnimation;
         }, 100) */
@@ -108,7 +108,7 @@ class Pacman {
         return false
     }
 
-    checkGhostColission() {
+    checkGhostCollision() {
         for (let i = 0; i < ghosts.length; i++) {
             let ghost = ghosts[i]
             if (ghost.getMapX() == this.getMapX() && ghost.getMapY() == this.getMapY()) {
@@ -137,7 +137,7 @@ class Pacman {
     }
 
     changeAnimation() {
-        this.currentFame = this.currentFame == this.frameCount ? 1 : this.currentFame + 1
+        this.currentFrame = this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1
     }
 
     draw() {
@@ -156,7 +156,7 @@ class Pacman {
 
         canvasContext.drawImage(
             pacmanFrames,
-            (this.currentFame - 1) * oneBlockSize,
+            (this.currentFrame - 1) * oneBlockSize,
             0,
             oneBlockSize,
             oneBlockSize,
