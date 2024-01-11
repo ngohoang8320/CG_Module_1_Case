@@ -36,6 +36,11 @@ const DIRECTION_UP = 3
 const DIRECTION_LEFT = 2
 const DIRECTION_DOWN = 1
 
+let eatSound = new Audio("eat.mp3")
+let meetGhost = new Audio("collision.mp3")
+let overSound = new Audio("over.mp3")
+let winSound = new Audio("win.mp3")
+
 //Set default ghosts's location
 let ghostLocations = [
     { x: 0, y: 0 },
@@ -71,7 +76,7 @@ let map_origin = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
-/* let map_origin = [
+let map_origin_2 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -95,21 +100,37 @@ let map_origin = [
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-] */
+]
 
 let map = []
-for (let i = 0; i < map_origin.length; i++) {
-    map[i] = map_origin[i].slice()
-}
+let checkSetMap = document.getElementById('setmap')
+let checkMap = function () {
+    map = []
+    if (!checkSetMap.checked) {
+        for (let i = 0; i < map_origin.length; i++) {
+            map[i] = map_origin[i].slice()
+        }
+    }
+    else {
+        for (let i = 0; i < map_origin_2.length; i++) {
+            map[i] = map_origin_2[i].slice()
+        }
+    }
 
-//Count origin number of food to check if eat all the food to set you win
-for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-        if (map[i][j] == 2) {
-            foodCount++
+    //Count origin number of food to check if eat all the food to set you win
+    foodCount = 0
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 2) {
+                foodCount++
+            }
         }
     }
 }
+
+
+
+checkMap()
 
 //Set some location for ghosts to focus when they don't aware pacman
 let randomTargetsForGhost = [
@@ -134,16 +155,30 @@ let gameLoop = function () {
 //NEW FEAT: IF YOU EAT FREQUENCY IN 2 SECOND, YOU GET MORE POINT
 let plusScore = 10
 let tempScore
+let tempScoreCheck
+let countCheck = 0
 setInterval(() => {
     if (tempScore != score) {
-        plusScore = 10
-    }
-    else {
-        plusScore = 1
+        eatSound.currentTime = 0
+        eatSound.play()
     }
     tempScore = score
-}, 2000)
 
+    if (countCheck == 200) {
+        if (tempScoreCheck != score) {
+            plusScore = 10
+            countCheck = 0
+            tempScoreCheck = score
+        }
+        else {
+            plusScore = 1
+            countCheck = 0
+            tempScoreCheck = score
+
+        }
+    }
+    countCheck++
+}, 10)
 
 let update = function () {
     pacman.moveProcess()
@@ -155,11 +190,21 @@ let update = function () {
     }
 
     if (pacman.checkGhostCollision()) {
+        meetGhost.currentTime = 0.2
+        meetGhost.play()
         restartGame()
     }
 
     if (scoreCount >= foodCount) {
+        winSound.play()
+        video.volume = 0
         drawWin()
+        let name = prompt('Enter your name:')
+        names.push({ 'name': name, 'score': score * 10 })
+        names.sort((a, b) => b.score - a.score)
+        localStorage.setItem("Names", JSON.stringify(names))
+        createRect(500, 0, canvas.width, canvas.height, 'black')
+        drawRank()
         clearInterval(gameInterval)
     }
 }
@@ -173,9 +218,13 @@ if (names === null) {
 let restartGame = () => {
     // wallColor = wallColor_range[Math.floor(Math.random() * wallColor_range.length)]
     createNewPacman()
-    check_hard()
+    // check_hard()
+    createNewGhosts(ghostSpeed)
     lives--
     if (lives == 0) {
+        overSound.play()
+        meetGhost.pause()
+        video.volume = 0
         gameOver()
     }
 }
@@ -305,6 +354,9 @@ let reset = function () {
         map[i] = map_origin[i].slice()
     }
     gameInterval = setInterval(gameLoop, 1000 / fps)
+    checkMap()
+    video.volume = 0.1
+    video.currentTime = 0
 }
 
 let drawWalls = function () {
@@ -378,7 +430,7 @@ let createNewPacman = () => {
 
 let createNewGhosts = function (gSpeed) {
     ghosts = []
-    for (let i = 0; i < ghostCount * 3; i++) {
+    for (let i = 0; i < ghostCount; i++) {
         let newGhost = new Ghosts(
             9 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
             10 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
@@ -440,3 +492,9 @@ window.addEventListener('keydown', (event) => {
         }
     }, 1)
 })
+
+//Set volume for video
+let video = document.getElementById('myvideo')
+video.volume = 0.0
+eatSound.volume = 0.2
+overSound.volume = 0.2

@@ -1,5 +1,12 @@
 @import url('https://db.onlinewebfonts.com/c/b10849c899982654fae3f01d02269043?family=Emulogic');
 
+#myvideo {
+    position: absolute;
+    top: 200px;
+    left: -80px;
+    border: 5px dotted white;
+}
+
 .set {
     vertical-align: top;
     display: inline-block;
@@ -41,6 +48,10 @@
     /* vertical-align: top; */
     font-family: "Emulogic";
     color: white;
+}
+
+.switch.setmap {
+    top: 120px;
 }
 
 .switch input {

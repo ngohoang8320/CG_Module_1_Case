@@ -41,7 +41,6 @@ class Pacman {
         if (this.checkCollision()) {
             this.moveBackwards()
         }
-
     }
 
     eat(plus) {
